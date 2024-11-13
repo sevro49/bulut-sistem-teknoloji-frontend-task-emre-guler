@@ -30,7 +30,7 @@ const ProductImage = ({ product }: { product: Product }) => {
           onClick= {() => setOpen(true)}
           src={product.images[currentImage]} 
           alt={product.title} 
-          className="w-[40rem] border cursor-pointer" 
+          className="w-[40rem] h-[40rem] object-contain border cursor-pointer" 
           loading="lazy"/>
 
         {/* Prev Image */}
@@ -68,7 +68,7 @@ const ProductImage = ({ product }: { product: Product }) => {
             key={index} 
             src={image} 
             alt={product.title} 
-            className="w-[8rem] border cursor-pointer" 
+            className="w-[8rem] h-[8rem] object-contain border cursor-pointer" 
             loading="lazy"/>
         ))}
       </div>

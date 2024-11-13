@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Product } from '@/types/types.ts';
 
+// API URL
 const PRODUCTS_URL = "https://dummyjson.com/products?limit=200";
 
 // Request to fetch all products
@@ -17,11 +18,11 @@ export const fetchProducts = createAsyncThunk(
 const requestSlice = createSlice({
   name: 'requests',
   initialState: {
-    fetchProducts: {
-      products: [] as Product[],
-      status: 'idle',
-      error: null as string | null, // error type is string or null
-    },
+    products: [] as Product[],
+    filteredProducts: [] as Product[],
+    status: 'idle',
+    error: null as string | null, // error type is string or null
+    
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -29,18 +30,18 @@ const requestSlice = createSlice({
 
     // fetchProducts
     .addCase(fetchProducts.pending, (state) => {
-      state.fetchProducts.status = 'loading';
+      state.status = 'loading';
     })
     .addCase(fetchProducts.fulfilled, (state, action) => {
-      state.fetchProducts.status = 'succeeded';
-      state.fetchProducts.products = action.payload;
+      state.status = 'succeeded';
+      state.products = action.payload;
     })
     .addCase(fetchProducts.rejected, (state, action) => {
-      state.fetchProducts.status = 'failed';
-      state.fetchProducts.error = action.error.message || null;
+      state.status = 'failed';
+      state.error = action.error.message || null;
     })
   }
 });
 
-// export const {  } = requestSlice.actions;
+// export const {} = requestSlice.actions;
 export default requestSlice.reducer;

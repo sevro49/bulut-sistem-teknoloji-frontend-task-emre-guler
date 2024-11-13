@@ -4,7 +4,7 @@ import requestReducer from '@/store/requestSlice';
 export const store = configureStore({
   reducer: {
     // Added reducers
-    counter: requestReducer,
+    requests: requestReducer,
   },
 });
 

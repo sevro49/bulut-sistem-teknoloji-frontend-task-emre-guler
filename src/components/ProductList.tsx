@@ -4,19 +4,22 @@ import { fetchProducts } from "@/store/requestSlice";
 import { RootState, AppDispatch } from "@/store/store";
 import { Product } from "@/types/types";
 
+import { Icon } from '@iconify/react';
+
 // Material UI components
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+import CardActions from '@mui/material/CardActions';
 import CardActionArea from '@mui/material/CardActionArea';
 import Skeleton from '@mui/material/Skeleton';
 import RatingStars from "./RatingStars";
+import { Button } from "@mui/material";
 
 const ProductList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { products, status, error } = useSelector(
-    (state: RootState) => state.counter.fetchProducts
+    (state: RootState) => state.requests
   );
 
   const [visibleProducts, setVisibleProducts] = useState<Product[]>([]);
@@ -74,14 +77,14 @@ const ProductList = () => {
   }
 
   return (
-    <section id="product-list" className="h-full w-full mt-12">
-      <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <section id="product-list" className="h-full mt-12">
+      <div className="w-full grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
         {/* Show skeletons on first load */}
         {status === "loading" && (
           Array.from({ length: 16 }).map((_, index) => (
             <Card key={index} sx={{ height: '100%' }}>
               <CardActionArea sx={{ height: '100%' }}>
-                <Skeleton variant="rectangular" width="100%" height={250} />
+                <Skeleton variant="rectangular" width={320} height={320} />
                 <CardContent>
                   <Skeleton variant="text" width="60%" height={20} />
                   <Skeleton variant="text" width="40%" height={16} />
@@ -94,7 +97,7 @@ const ProductList = () => {
         {/* Show products when loaded */}
         {visibleProducts.map((product: Product) => (
           <Card key={product?.id} sx={{ height: '100%' }}>
-            <CardActionArea sx={{ height: '100%' }}>
+            <CardActionArea>
               <CardMedia
                 component="img"
                 height="140"
@@ -103,12 +106,30 @@ const ProductList = () => {
               />
               <CardContent>
                 <p className="h-12 line-clamp-2 mb-2 w-full"><span className="me-1 font-semibold">{product?.brand}</span>{product?.title}</p>
-                <div className="flex items-center gap-2 text-xs mb-2">{product?.rating} <RatingStars rating={product.rating}/> ({product?.reviews.length})</div>
-                <Typography gutterBottom variant="h6" color="green" component="p">
-                  {product?.price} 
-                </Typography>
+                <div className="flex items-center gap-2 text-xs mb-2">
+                {product?.rating} <RatingStars rating={product.rating}/> ({product?.reviews.length})
+                </div>
+                <p className="text-xl text-red-700 font-bold">
+                  {product?.discountPercentage > 0 
+                  ? (
+                    <>
+                      <span className="line-through text-zinc-600 font-normal text-sm me-2">{product?.price} $</span>
+                      <span>{(product?.price - (product.price * product.discountPercentage * 1 / 100)).toFixed(2)} $</span>
+                    </>
+                  ) : (
+                    <span>{product?.price} $ </span>
+                  )}
+                </p>
               </CardContent>
             </CardActionArea>
+            <CardActions className="flex  gap-2 w-full items-center justify-center" sx={{ '& > :not(style) ~ :not(style)': { marginLeft: 0 } }}>
+              <Button variant="contained" color="warning" className="w-full flex items-center gap-2" sx={{ textTransform: 'none' }}>
+                <Icon icon="mdi:cart" className="text-xl"/>
+              </Button>
+              <Button variant="outlined" color="error" className="w-full h-full">
+                <Icon icon="mdi:heart-outline" className="text-xl"/>
+              </Button>
+            </CardActions>
           </Card>
         ))}
 

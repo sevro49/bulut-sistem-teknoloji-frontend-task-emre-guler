@@ -10,7 +10,7 @@ export const fetchProducts = createAsyncThunk(
   'requests/fetchProducts',
   async () => {
     const response = await axios.get(PRODUCTS_URL);
-    console.log(response?.data?.products)
+    console.log(response.data.products)
     return response.data.products;
   }
 )
@@ -24,7 +24,11 @@ const requestSlice = createSlice({
     error: null as string | null, // error type is string or null
     
   },
-  reducers: {},
+  reducers: {
+    resetStatus: (state) => {
+      state.status = 'idle';  // reset status to 'idle'
+    },
+  },
   extraReducers: (builder) => {
     builder
 
@@ -43,5 +47,5 @@ const requestSlice = createSlice({
   }
 });
 
-// export const {} = requestSlice.actions;
+export const { resetStatus } = requestSlice.actions;
 export default requestSlice.reducer;

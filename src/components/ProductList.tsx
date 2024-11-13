@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "@/store/requestSlice";
+import { fetchProducts, resetStatus } from "@/store/requestSlice";
 import { RootState, AppDispatch } from "@/store/store";
 import { Product } from "@/types/types";
+import { Link } from 'react-router-dom';
 
 import { Icon } from '@iconify/react';
 
@@ -29,10 +30,12 @@ const ProductList = () => {
 
   // Fetch products on initial render
   useEffect(() => {
+    dispatch(resetStatus()); // Reset status to 'idle' when component mounts. otherwise, it will not fetch again.
+
     if (status === "idle") {
       dispatch(fetchProducts());
     }
-  }, [status, dispatch]);
+  }, [dispatch]);
 
   // get first 20 products on refresh
   useEffect(() => {
@@ -84,11 +87,11 @@ const ProductList = () => {
           Array.from({ length: 16 }).map((_, index) => (
             <Card key={index} sx={{ height: '100%' }}>
               <CardActionArea sx={{ height: '100%' }}>
-                <Skeleton variant="rectangular" width={320} height={320} />
-                <CardContent>
-                  <Skeleton variant="text" width="60%" height={20} />
-                  <Skeleton variant="text" width="40%" height={16} />
-                </CardContent>
+                  <Skeleton variant="rectangular" width={320} height={320} />
+                  <CardContent>
+                    <Skeleton variant="text" width="60%" height={20} />
+                    <Skeleton variant="text" width="40%" height={16} />
+                  </CardContent>
               </CardActionArea>
             </Card>
           ))
@@ -97,31 +100,33 @@ const ProductList = () => {
         {/* Show products when loaded */}
         {visibleProducts.map((product: Product) => (
           <Card key={product?.id} sx={{ height: '100%' }}>
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                height="140"
-                image={product?.thumbnail}
-                alt={product?.title}
-              />
-              <CardContent>
-                <p className="h-12 line-clamp-2 mb-2 w-full"><span className="me-1 font-semibold">{product?.brand}</span>{product?.title}</p>
-                <div className="flex items-center gap-2 text-xs mb-2">
-                {product?.rating} <RatingStars rating={product.rating}/> ({product?.reviews.length})
-                </div>
-                <p className="text-xl text-red-700 font-bold">
-                  {product?.discountPercentage > 0 
-                  ? (
-                    <>
-                      <span className="line-through text-zinc-600 font-normal text-sm me-2">{product?.price} $</span>
-                      <span>{(product?.price - (product.price * product.discountPercentage * 1 / 100)).toFixed(2)} $</span>
-                    </>
-                  ) : (
-                    <span>{product?.price} $ </span>
-                  )}
-                </p>
-              </CardContent>
-            </CardActionArea>
+            <Link to={`/product/${product?.id}`}>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={product?.thumbnail}
+                  alt={product?.title}
+                />
+                <CardContent>
+                  <p className="h-12 line-clamp-2 mb-2 w-full"><span className="me-1 font-semibold">{product?.brand}</span>{product?.title}</p>
+                  <div className="flex items-center gap-2 text-xs mb-2">
+                  {product?.rating} <RatingStars rating={product.rating}/> ({product?.reviews.length})
+                  </div>
+                  <p className="text-xl text-red-700 font-bold">
+                    {product?.discountPercentage > 0 
+                    ? (
+                      <>
+                        <span className="line-through text-zinc-600 font-normal text-sm me-2">{product?.price} $</span>
+                        <span>{(product?.price - (product.price * product.discountPercentage * 1 / 100)).toFixed(2)} $</span>
+                      </>
+                    ) : (
+                      <span>{product?.price} $ </span>
+                    )}
+                  </p>
+                </CardContent>
+              </CardActionArea>
+            </Link>
             <CardActions className="flex  gap-2 w-full items-center justify-center" sx={{ '& > :not(style) ~ :not(style)': { marginLeft: 0 } }}>
               <Button variant="contained" color="warning" className="w-full flex items-center gap-2" sx={{ textTransform: 'none' }}>
                 <Icon icon="mdi:cart" className="text-xl"/>

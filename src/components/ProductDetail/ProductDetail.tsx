@@ -16,7 +16,7 @@ const ProductDetail = () => {
   }
 
   return (
-    <section id='product-detail' className='flex flex-col sm:flex-row gap-10 w-full h-full px-[0.5rem] sm:px-[5rem] lg:px-[8rem] xl:px-[10rem] 2xl:px-[18rem] mt-12'>
+    <section id='product-detail' className='flex flex-col lg:flex-row gap-10 w-full h-full px-[0.5rem] sm:px-[2rem] md:px-[5rem] lg:px-[8rem] xl:px-[10rem] 2xl:px-[18rem] mt-12'>
       <ProductImage product={product} />
       <ProductInfo product={product} />
     </section>

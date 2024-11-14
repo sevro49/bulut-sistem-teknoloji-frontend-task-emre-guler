@@ -7,7 +7,7 @@ const RatingStars = ({ rating }: { rating: number }) => {
 
   const quarterStar = decimal >= 0.12 && decimal < 0.39;
   const halfStar = decimal >= 0.40 && decimal < 0.74;
-  const threeQuarterStar = decimal >= 0.75;
+  const threeQuarterStar = decimal >= 0.74;
   const emptyStars = 5 - fullStars - (halfStar || quarterStar || threeQuarterStar ? 1 : 0); // Empty starts, total 5
 
   const starIcons = useMemo(() => {

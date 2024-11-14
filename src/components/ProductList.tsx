@@ -5,6 +5,7 @@ import { RootState, AppDispatch } from "@/store/store";
 import { Product } from "@/types/types";
 import { Link } from 'react-router-dom';
 
+import RatingStars from "./RatingStars";
 import { Icon } from '@iconify/react';
 
 // Material UI components
@@ -14,7 +15,7 @@ import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
 import CardActionArea from '@mui/material/CardActionArea';
 import Skeleton from '@mui/material/Skeleton';
-import RatingStars from "./RatingStars";
+import Chip from '@mui/material/Chip';
 import { Button } from "@mui/material";
 
 const ProductList = () => {
@@ -113,7 +114,7 @@ const ProductList = () => {
                   <div className="flex items-center gap-2 text-xs mb-2">
                   {product?.rating} <RatingStars rating={product.rating}/> ({product?.reviews.length})
                   </div>
-                  <p className="text-xl text-red-700 font-bold">
+                  <p className="text-xl text-red-700 font-bold mb-2">
                     {product?.discountPercentage > 0 
                     ? (
                       <>
@@ -124,11 +125,21 @@ const ProductList = () => {
                       <span>{product?.price} $ </span>
                     )}
                   </p>
+                  <div className="text-sm text-red-700 font-bold h-6">
+                    {product?.availabilityStatus === "Low Stock" ? (
+                      <Chip label="Low Stock" color="error" size="small"/>
+                    ) : product?.availabilityStatus === "Out of Stock" ? (
+                      <Chip label="Out of Stock" size="small"/>
+                    ) : (
+                      ""
+                    )
+                    }
+                  </div>
                 </CardContent>
               </CardActionArea>
             </Link>
             <CardActions className="flex  gap-2 w-full items-center justify-center" sx={{ '& > :not(style) ~ :not(style)': { marginLeft: 0 } }}>
-              <Button variant="contained" color="warning" className="w-full flex items-center gap-2" sx={{ textTransform: 'none' }}>
+              <Button disabled={product?.availabilityStatus === "Out of Stock"} variant="contained" color="warning" className="w-full flex items-center gap-2" sx={{ textTransform: 'none' }}>
                 <Icon icon="mdi:cart" className="text-xl"/>
               </Button>
               <Button variant="outlined" color="error" className="w-full h-full">

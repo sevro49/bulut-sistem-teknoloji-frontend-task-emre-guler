@@ -22,42 +22,16 @@ const ProductImage = ({ product }: { product: Product }) => {
   };
   
   return (
-    <section id="product-images">
+    <section id="product-images" className="w-full ">
 
       {/* Product Image */}
-      <div className="relative">
+      <div className="relative w-full">
         <img 
           onClick= {() => setOpen(true)}
           src={product.images[currentImage]} 
           alt={product.title} 
-          className="w-[40rem] h-[40rem] object-contain border cursor-pointer" 
+          className="w-[35rem] h-[35rem] object-contain border cursor-pointer" 
           loading="lazy"/>
-
-        {/* Prev Image */}
-        <IconButton
-          sx={{position: 'absolute',
-            backgroundColor: 'rgba(255, 255, 255, 1)',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-            },
-          }}
-          onClick={handlePrevImage}
-          className="absolute left-0 top-1/2 -translate-y-1/2">
-          <Icon icon="mingcute:left-fill" className="text-4xl"/>
-        </IconButton>
-
-        {/* Next Image */}
-        <IconButton
-          sx={{position: 'absolute',
-            backgroundColor: 'rgba(255, 255, 255, 1)',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-            },
-          }}
-          onClick={handleNextImage}
-          className="absolute right-0 top-1/2 -translate-y-1/2">
-          <Icon icon="mingcute:right-fill" className="text-4xl"/>
-        </IconButton>
       </div>
 
       {/* Product Thumbnail Images */}

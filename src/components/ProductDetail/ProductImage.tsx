@@ -22,7 +22,7 @@ const ProductImage = ({ product }: { product: Product }) => {
   };
   
   return (
-    <section id="product-images" className="w-full ">
+    <section id="product-images" className="w-full lg:max-w-[35rem] overflow-x-auto">
 
       {/* Product Image */}
       <div className="relative w-full">
@@ -30,19 +30,19 @@ const ProductImage = ({ product }: { product: Product }) => {
           onClick= {() => setOpen(true)}
           src={product.images[currentImage]} 
           alt={product.title} 
-          className="w-[35rem] h-[35rem] object-contain border cursor-pointer" 
+          className="w-full lg:w-[35rem] h-[35rem] object-contain border cursor-pointer" 
           loading="lazy"/>
       </div>
 
       {/* Product Thumbnail Images */}
-      <div className="flex items-center gap-2 mt-4">
+      <div className="w-full flex items-center gap-2 mt-4 overflow-x-auto special-scrollbar">
         {product.images.map((image, index) => (
           <img 
             onClick= {() => setCurrentImage(index)}
             key={index} 
             src={image} 
             alt={product.title} 
-            className="w-[8rem] h-[8rem] object-contain border cursor-pointer" 
+            className="w-[3rem] h-[3rem] min-w-[3rem] min-h-[3rem] object-contain border cursor-pointer" 
             loading="lazy"/>
         ))}
       </div>

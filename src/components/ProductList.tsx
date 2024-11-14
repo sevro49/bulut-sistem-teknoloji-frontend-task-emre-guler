@@ -138,8 +138,8 @@ const ProductList = () => {
                 </CardContent>
               </CardActionArea>
             </Link>
-            <CardActions className="flex  gap-2 w-full items-center justify-center" sx={{ '& > :not(style) ~ :not(style)': { marginLeft: 0 } }}>
-              <Button disabled={product?.availabilityStatus === "Out of Stock"} variant="contained" color="warning" className="w-full flex items-center gap-2" sx={{ textTransform: 'none' }}>
+            <CardActions className="flex gap-2 w-full items-center justify-center" sx={{ '& > :not(style) ~ :not(style)': { marginLeft: 0 } }}>
+              <Button disabled={product?.availabilityStatus === "Out of Stock"} variant="contained" color="success" className="w-full flex items-center gap-2" sx={{ textTransform: 'none' }}>
                 <Icon icon="mdi:cart" className="text-xl"/>
               </Button>
               <Button variant="outlined" color="error" className="w-full h-full">

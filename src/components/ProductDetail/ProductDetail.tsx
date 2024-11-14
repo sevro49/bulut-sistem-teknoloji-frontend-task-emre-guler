@@ -8,7 +8,7 @@ import ProductInfo from './ProductInfo';
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = useSelector((state: RootState) =>
-    state.requests.products.find((prod: Product) => prod.id.toString() === id)
+    state.requests.filteredProducts.find((prod: Product) => prod.id.toString() === id)
   );
 
   if(!product) {

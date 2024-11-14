@@ -20,7 +20,7 @@ import { Button } from "@mui/material";
 
 const ProductList = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { products, status, error } = useSelector(
+  const { filteredProducts, status, error, sortOrder } = useSelector(
     (state: RootState) => state.requests
   );
 
@@ -40,10 +40,15 @@ const ProductList = () => {
 
   // get first 20 products on refresh
   useEffect(() => {
-    if (products.length > 0) {
-      setVisibleProducts(products.slice(0, 20)); // Initial products
+    if (filteredProducts.length > 0) {
+      setVisibleProducts(filteredProducts.slice(0, 20)); // Initial products
     }
-  }, [products]);
+  }, [filteredProducts]);
+
+  // Update visible products when filteredProducts or sortOrder changes
+  useEffect(() => {
+    setVisibleProducts(filteredProducts.slice(0, 20)); // Update visible products based on filteredProducts and sortOrder
+  }, [filteredProducts, sortOrder]);
 
   // Manages the lazy loading mechanism using IntersectionObserver.
   // When the 'lastElement' at the bottom of the page becomes visible,
@@ -55,11 +60,11 @@ const ProductList = () => {
     }
     
     observerRef.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && products.length > visibleProducts.length) {
+      if (entries[0].isIntersecting && filteredProducts.length > visibleProducts.length) {
         setIsLoadingMore(true);
         setVisibleProducts((prev) => [
           ...prev,
-          ...products.slice(prev.length, prev.length + 10),
+          ...filteredProducts.slice(prev.length, prev.length + 10),
         ]);
         setIsLoadingMore(false);
       }
@@ -74,15 +79,15 @@ const ProductList = () => {
     return () => {
       if (observerRef.current) observerRef.current.disconnect();
     };
-  }, [lastElement, products, visibleProducts]);
+  }, [lastElement, filteredProducts, visibleProducts]);
   
   if (status === "failed") {
     return <div>Error: {error}</div>;
   }
 
   return (
-    <section id="product-list" className="h-full mt-12">
-      <div className="w-full grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+    <section id="product-list" className="h-full lg:mt-12">
+      <div className="w-full grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 gap-4">
         {/* Show skeletons on first load */}
         {status === "loading" && (
           Array.from({ length: 16 }).map((_, index) => (

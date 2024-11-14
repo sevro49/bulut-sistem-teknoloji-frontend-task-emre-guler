@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Product } from '@/types/types.ts';
 
@@ -13,21 +13,52 @@ export const fetchProducts = createAsyncThunk(
     console.log(response.data.products)
     return response.data.products;
   }
-)
+);
+
+// Sort products based on price (ascending or descending)
+const sortProducts = (products: Product[], order: 'ascending' | 'descending' | 'default'): Product[] => {
+  if (order === 'default') {
+    return products; // If no sorting, return products as they are
+  }
+  
+  return [...products].sort((a, b) => {
+    if (order === 'ascending') {
+      return a.price - b.price;
+    } else if (order === 'descending') {
+      return b.price - a.price;
+    }
+    return 0;
+  });
+}
+
+interface ProductState {
+  products: Product[];
+  filteredProducts: Product[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+  sortOrder: 'ascending' | 'descending' | 'default';
+}
+
+const initialState: ProductState = {
+  products: [],
+  filteredProducts: [],
+  status: 'idle',
+  error: null,
+  sortOrder: 'default', // default sort order, which is no sorting
+}
 
 const requestSlice = createSlice({
   name: 'requests',
-  initialState: {
-    products: [] as Product[],
-    filteredProducts: [] as Product[],
-    status: 'idle',
-    error: null as string | null, // error type is string or null
-    
-  },
+  initialState,
   reducers: {
     resetStatus: (state) => {
       state.status = 'idle';  // reset status to 'idle'
     },
+    setSortOrder: (state, action: PayloadAction<'ascending' | 'descending' | 'default'>) => {
+      state.sortOrder = action.payload;
+      // Apply the sort after setting the sort order
+      state.filteredProducts = sortProducts(state.products, action.payload);
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -36,9 +67,11 @@ const requestSlice = createSlice({
     .addCase(fetchProducts.pending, (state) => {
       state.status = 'loading';
     })
-    .addCase(fetchProducts.fulfilled, (state, action) => {
+    .addCase(fetchProducts.fulfilled, (state) => {
+      // Set status to 'succeeded' when fetching is successful
       state.status = 'succeeded';
-      state.products = action.payload;
+      // Set sorted products
+      state.filteredProducts = sortProducts(state.products, state.sortOrder);
     })
     .addCase(fetchProducts.rejected, (state, action) => {
       state.status = 'failed';
@@ -47,5 +80,5 @@ const requestSlice = createSlice({
   }
 });
 
-export const { resetStatus } = requestSlice.actions;
+export const { resetStatus, setSortOrder } = requestSlice.actions;
 export default requestSlice.reducer;
